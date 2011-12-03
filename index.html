@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="static/d3.js"></script>
+    <script type="text/javascript" src="static/polymaps.min.js"></script>
+    <style type="text/css">
+
+@import url("static/style.css");
+
+html, body {
+  height: 100%;
+  background: #E6E6E6;
+  margin: 0;
+  font: 10px sans-serif;
+}
+
+svg {
+  display: block;
+}
+
+circle {
+  stroke: black;
+  fill: brown;
+  fill-opacity: .5;
+}
+
+#map {
+  width: 960px;
+  height: 500px;
+}
+
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+var po = org.polymaps;
+
+// Create the map object, add it to #map…
+var map = po.map()
+    .container(d3.select("#map").append("svg").node())
+    .center({"lat":50, "lon":8})
+    .zoom(8)
+    .add(po.interact());
+
+// Add the CloudMade image tiles as a base layer…
+map.add(po.image()
+    .url(po.url("http://{S}tile.cloudmade.com" + "/58f7adee80414bbe9535f6345c1b0ce8" // http://cloudmade.com/register
+    + "/998/256/{Z}/{X}/{Y}.png") 
+    .hosts(["a.", "b.", "c.", ""])));
+
+// Add the compass control on top.
+map.add(po.compass()
+    .pan("none"));
+
+// Load the station data. When the data comes back, display it.
+d3.json("./data/samentausch_partner_frankfurt_geo.json", function(data) {
+
+  // Insert our layer beneath the compass.
+  var layer = d3.select("#map svg").insert("svg:g", ".compass");
+
+  // Add an svg:g for each station.
+  var marker = layer.selectAll("g")
+      .data(data)
+    .enter().append("g")
+      .attr("transform", transform);
+
+  // Add a circle.
+  marker.append("circle")
+      .attr("r", circleSize);
+
+  // Add a label.
+  marker.append("text")
+      .attr("x", 7)
+      .attr("dy", ".31em")
+      .text(function(d) { return "";});//d.city; });
+
+  // Whenever the map moves, update the marker positions.
+  map.on("move", function() {
+    layer.selectAll("g").attr("transform", transform);
+    layer.selectAll("g circle").attr("r", circleSize );
+  });
+
+  function circleSize(d) {
+      return map.zoom() * 0.5;
+  }
+
+  function transform(d) {
+      p = map.locationPoint({lon: d.longitude, lat: d.latitude});
+      return "translate(" + p.x + "," + p.y + ")";
+  }
+});
+
+    </script>
+  </body>
+</html>
