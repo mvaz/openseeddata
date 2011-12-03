@@ -4,9 +4,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <title>Drag Feature Example</title>
+        <title>seed exchange partners</title>
         
-        <!-- <link rel="stylesheet" href="../theme/default/style.css" type="text/css"> -->
         <link rel="stylesheet" href="static/style-openlayers.css" type="text/css">
 
         <style type="text/css">
@@ -33,7 +32,7 @@
                 var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
                 renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
-                vectors = new OpenLayers.Layer.Vector("Vector Layer", {
+                vectors = new OpenLayers.Layer.Vector("Seed Exchange Partners", {
                     renderers: renderer
                 });
 
@@ -41,22 +40,9 @@
                 map.addControl(new OpenLayers.Control.LayerSwitcher());
                 map.addControl(new OpenLayers.Control.MousePosition());
 
-                controls = {
-                    point: new OpenLayers.Control.DrawFeature(vectors, OpenLayers.Handler.Point),
-                    line: new OpenLayers.Control.DrawFeature(vectors, OpenLayers.Handler.Path),
-                    polygon: new OpenLayers.Control.DrawFeature(vectors, OpenLayers.Handler.Polygon),
-                    drag: new OpenLayers.Control.DragFeature(vectors)
-                };
-
-                for(var key in controls) {
-                    map.addControl(controls[key]);
-                }
-                
                 addPoint(-71,42,vectors);
                 
-                map.setCenter(new OpenLayers.LonLat(-65, 40), 3);
-                document.getElementById('noneToggle').checked = true;
-                
+                map.setCenter(new OpenLayers.LonLat(10, 50), 3);
                 
                 d3.json("./data/samentausch_partner_frankfurt_geo.json", function(data) {
                     for (var i = 0; i < data.length; i++) {
@@ -71,65 +57,20 @@
             function addPoint(x, y, vectorLayer) {
                 var feature = new OpenLayers.Feature.Vector( new OpenLayers.Geometry.Point(x, y),
                     {some:'data'},
-                    {externalGraphic: 'static/marker.png', graphicHeight: 21, graphicWidth: 16} );
+                    {externalGraphic: 'static/marker.png', graphicHeight: 24, graphicWidth: 22} );
                 vectorLayer.addFeatures(feature);
-            }
-
-            function toggleControl(element) {
-                for(key in controls) {
-                    var control = controls[key];
-                    if(element.value == key && element.checked) {
-                        control.activate();
-                    } else {
-                        control.deactivate();
-                    }
-                }
             }
         </script>
     </head>
     <body onload="init()">
-        <h1 id="title">Drag Feature Example</h1>
+        <h1 id="title">OpenData Day 2011: seed exchange partners for Frankfurt</h1>
 
-        <div id="tags">
-            point, line, linestring, polygon, digitizing, geometry, draw, drag
-        </div>
-
-        <p id="shortdesc">
-            Demonstrates point, line and polygon creation and editing.
-        </p>
+	<p id="shortdesc">
+		This was created during the OpenData Day 2011. Visit the OpenData Day wiki page for <a href="http://www.opendataday.org/wiki/Frankfurt">Frankfurt</a> to get more information.
+	</p>
 
         <div id="map" class="smallmap"></div>
         
-        <div id="controls">
-            <ul id="controlToggle">
-
-                <li>
-                    <input type="radio" name="type" value="none" id="noneToggle"
-                           onclick="toggleControl(this);" checked="checked" />
-                    <label for="noneToggle">navigate</label>
-                </li>
-                <li>
-                    <input type="radio" name="type" value="point" id="pointToggle" onclick="toggleControl(this);" />
-                    <label for="pointToggle">draw point</label>
-                </li>
-
-                <li>
-                    <input type="radio" name="type" value="line" id="lineToggle" onclick="toggleControl(this);" />
-                    <label for="lineToggle">draw line</label>
-                </li>
-                <li>
-                    <input type="radio" name="type" value="polygon" id="polygonToggle" onclick="toggleControl(this);" />
-                    <label for="polygonToggle">draw polygon</label>
-                </li>
-
-                <li>
-                    <input type="radio" name="type" value="drag" id="dragToggle"
-                           onclick="toggleControl(this);" />
-                    <label for="dragToggle">drag feature</label>
-                </li>
-            </ul>
-        </div>
-
         <div id="docs"></div>
     </body>
 
