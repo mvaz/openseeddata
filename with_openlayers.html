@@ -40,8 +40,6 @@
                 map.addControl(new OpenLayers.Control.LayerSwitcher());
                 map.addControl(new OpenLayers.Control.MousePosition());
 
-                addPoint(-71,42,vectors);
-                
                 map.setCenter(new OpenLayers.LonLat(10, 50), 3);
                 
                 d3.json("./data/samentausch_partner_frankfurt_geo.json", function(data) {
